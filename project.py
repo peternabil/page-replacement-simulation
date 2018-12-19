@@ -13,6 +13,10 @@ def fifo(refrence_string,frame_num,page_num):
     """
         the first page to enter the table is the first to be replaced
         returns number of page faults
+        paramarters:
+        refrence_string : list of the calls of the pages
+        frame_num : integer representing the number of frames
+        page_num : integer representing the number of pages
     """
     pass
 
@@ -21,6 +25,10 @@ def lru(refrence_string,frame_num,page_num):
     """
         the page that was used a long time ago at that exact moment is to be replaced
         returns number of page faults
+        paramarters:
+        refrence_string : list of the calls of the pages
+        frame_num : integer representing the number of frames
+        page_num : integer representing the number of pages
     """
     pass
 
@@ -29,6 +37,10 @@ def lfu(refrence_string,frame_num,page_num):
         look at the entire string untill this moment and find the page addressed the least
         if there's more than one take the first one entered
         returns number of page faults
+        paramarters:
+        refrence_string : list of the calls of the pages
+        frame_num : integer representing the number of frames
+        page_num : integer representing the number of pages
     """
     pass
 
@@ -38,6 +50,10 @@ def second_chance(refrence_string,frame_num,page_num):
         the first page that meets us with a 0 used bit is removed and add the new page to the end of the queue , if we meet any page with 1 used bit before we find a page with 0
         used bit we change the used bit of that page to 0 and move it to the end of the queue
         returns number of page faults
+        paramarters:
+        refrence_string : list of the calls of the pages
+        frame_num : integer representing the number of frames
+        page_num : integer representing the number of pages
     """
     pass
 
@@ -53,6 +69,10 @@ def enhanced_second_chance(refrence_string,frame_num,page_num):
         4. (1, 1) recently used and modified—probablywill be used again soon, and
         the page will be need to be written out to disk before it can be replaced
         returns number of page faults
+        paramarters:
+        refrence_string : list of the calls of the pages
+        frame_num : integer representing the number of frames
+        page_num : integer representing the number of pages
     """
     pass
 
@@ -61,9 +81,20 @@ def optimal(refrence_string,frame_num,page_num):
         we calculate how much will each page be used and the one which is least used is
         the one we replace
         returns number of page faults
+        paramarters:
+        refrence_string : list of the calls of the pages
+        frame_num : integer representing the number of frames
+        page_num : integer representing the number of pages
     """
     pass
 
+
+def printing(refrence_string):
+    refrence_string_modified = ""
+    for i in range(len(refrence_string)-1):
+        refrence_string_modified+=str(refrence_string[i])+"-->"
+    refrence_string_modified+=str(refrence_string[-1])
+    return refrence_string_modified
 
 
 def main():
@@ -74,18 +105,18 @@ def main():
     """
     page_num = random.randint(0,99)
     frame_num = random.randint(1,20)
-    refrence_string = ""
+    refrence_string = []
     refrence_string_length = random.randint(10,50)
-    for i in range(refrence_string_length-1):
-        refrence_string+=str(random.randint(1,page_num))+"->"
-    refrence_string+=str(random.randint(1,page_num))
+    for i in range(refrence_string_length):
+        refrence_string.append(random.randint(1,page_num))
 
     #for debugging
     print("the page number  : {} ".format(page_num))
     print("the frame number : {} ".format(frame_num))
     print("the refrence string length : {} ".format(refrence_string_length))
-    print("the refrence string {}".format(refrence_string))
 
+    # print("the refrence string {}".format(refrence_string))
+    print("the refrence string {}".format(printing(refrence_string)))
     print("The page faults : ")
     print("using FIFO : {}".format(fifo(refrence_string,frame_num,page_num)))
     print("using LRU : {}".format(lru(refrence_string,frame_num,page_num)))
