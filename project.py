@@ -6,7 +6,6 @@
 # -*- coding: utf-8 -*-
 
 
-
 import random
 
 def fifo(refrence_string,frame_num,page_num):
@@ -55,7 +54,34 @@ def second_chance(refrence_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    pass
+    memqueue = []
+    selectdict = {}
+    pagefault = 0
+    for i in range(page_num):
+        selectdict.update({i+1:0})
+
+    for refrence in refrence_string:
+        if refrence in memqueue:
+            selectdict[refrence]=1
+        elif len(memqueue)==frame_num:
+            pagefault+=1
+            while(1):
+                x = memqueue[0]
+                if selectdict[x]==0:
+                    memqueue[0] = refrence
+                    break
+                else:
+                    # print("give {} a second chance".format(memqueue[0]))
+                    selectdict[x] = 0
+                    memqueue.remove(x)
+                    memqueue.append(x)
+        else:
+            pagefault+=1
+            memqueue.append(refrence)
+        # print(memqueue)
+        # print(selectdict)
+    return pagefault
+    # print(selectdict)
 
 def enhanced_second_chance(refrence_string,frame_num,page_num):
     """
@@ -74,7 +100,84 @@ def enhanced_second_chance(refrence_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    pass
+    pagefault = 0
+    memqueue0 = []
+    memqueue1 = []
+    memqueue2 = []
+    memqueue3 = []
+    selectdict = {}
+    for page in range(page_num):
+        selectdict.update({page+1:[0,random.randint(0,1)]})
+    # print(selectdict)
+    for refrence in refrence_string:
+        # print(memqueue0)
+        # print(memqueue1)
+        # print(memqueue2)
+        # print(memqueue3)
+        if refrence in memqueue0:
+            memqueue0.remove(refrence)
+            memqueue2.append(refrence)
+            selectdict[refrence][0] = 1
+        elif refrence in memqueue1:
+            memqueue1.remove(refrence)
+            memqueue3.append(refrence)
+            selectdict[refrence][0] = 1
+        elif refrence in memqueue2 or refrence in memqueue3:
+            continue
+        else:
+            pagefault+=1
+            if len(memqueue0)+len(memqueue1)+len(memqueue2)+len(memqueue3) < frame_num:
+                # print("{} there's space in buffer".format(refrence))
+                if selectdict[refrence][1] == 0:
+                    memqueue0.append(refrence)
+                else:
+                    memqueue1.append(refrence)
+
+            elif len(memqueue0) != 0:
+                # print("we will add {} in queue00 and remove {}".format(refrence,memqueue0[0]))
+                memqueue0.remove(memqueue0[0])
+                if selectdict[refrence][1] == 0:
+                    memqueue0.append(refrence)
+                else:
+                    memqueue1.append(refrence)
+
+            elif len(memqueue1) !=0:
+                # print("we will add {} in queue00 and remove {}".format(refrence,memqueue1[0]))
+                memqueue1.remove(memqueue1[0])
+                if selectdict[refrence][1] == 0:
+                    memqueue0.append(refrence)
+                else:
+                    memqueue1.append(refrence)
+
+            elif len(memqueue2) !=0:
+                # print("we will add {} in queue00 and remove {}".format(refrence,memqueue2[0]))
+                selectdict[memqueue2[0]][0] = 0
+                memqueue2.remove(memqueue2[0])
+                if selectdict[refrence][1] == 0:
+                    memqueue0.append(refrence)
+                else:
+                    memqueue1.append(refrence)
+                for item in memqueue2:
+                    selectdict[item][0] = 0
+                    memqueue0.append(item)
+                    memqueue2.remove(item)
+                    selectdict[item][0] = 0
+
+            elif len(memqueue3) !=0:
+                # print("we will add {} in queue00 and remove {}".format(refrence,memqueue3[0]))
+                selectdict[memqueue3[0]][0] = 0
+                memqueue3.remove(memqueue3[0])
+                if selectdict[refrence][1] == 0:
+                    memqueue0.append(refrence)
+                else:
+                    memqueue1.append(refrence)
+                for item in memqueue3:
+                    selectdict[item][0] = 0
+                    memqueue1.append(item)
+                    memqueue3.remove(item)
+                    selectdict[item][0] = 0
+
+    return pagefault
 
 def optimal(refrence_string,frame_num,page_num):
     """
@@ -86,8 +189,28 @@ def optimal(refrence_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    pass
+    frequency = {}
+    memqueue = []
+    pagefault = 0
+    for item in refrence_string:
+        frequency.update({item:0})
+    for item in refrence_string:
+        frequency[item]+=1
+    for refrence in refrence_string:
+        if refrence in memqueue:
+            continue
+        if len(memqueue) < frame_num:
+            memqueue.append(refrence)
+            pagefault+=1
+        else:
+            pagefault+=1
+            tempdict = {}
+            for memitem in memqueue:
+                tempdict.update({memitem:frequency[memitem]})
+            replacement = min(tempdict, key=tempdict.get)
+            memqueue[memqueue.index(replacement)]=refrence
 
+    return pagefault
 
 def printing(refrence_string):
     refrence_string_modified = ""
@@ -114,8 +237,6 @@ def main():
     print("the page number  : {} ".format(page_num))
     print("the frame number : {} ".format(frame_num))
     print("the refrence string length : {} ".format(refrence_string_length))
-
-    # print("the refrence string {}".format(refrence_string))
     print("the refrence string {}".format(printing(refrence_string)))
     print("The page faults : ")
     print("using FIFO : {}".format(fifo(refrence_string,frame_num,page_num)))
