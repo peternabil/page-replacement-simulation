@@ -68,11 +68,28 @@ def lfu(refrence_string,frame_num,page_num):
     frames = [-1] * frame_num
     frequency = [0] * frame_num
     faults = 0
+    counter=0
     for i in refrence_string:
+        counter += 1
         if i in frames:
             frequency[frames.index(i)] += 1
             continue
         k = min(frequency)
+        if faults >= frame_num:
+            minimums = []
+            for j in range(len(frequency)):
+                if frequency[j] == k:
+                    minimums.append(frames[j])
+            if len(minimums) > 1:
+                for m in reversed(range(counter)):
+                    if refrence_string[m] in frames and refrence_string[m] in minimums:
+                        minimums.pop(minimums.index(refrence_string[m]))
+                        if len(minimums)==1:
+                            break
+                frequency[frames.index(minimums[0])] = 1
+                frames[frames.index(minimums[0])] = i
+                faults += 1
+                continue
         frames[frequency.index(k)] = i
         frequency[frequency.index(k)]=1
         faults += 1
@@ -138,15 +155,12 @@ def main():
         and call all the past functions then prints the computed page fault number
 
     """
-    # page_num = random.randint(0,99)
-    page_num = 22
-    # frame_num = random.randint(1,20)
-    frame_num = 3
-    refrence_string = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
-    # refrence_string_length = random.randint(10,50)
-    refrence_string_length = 22
-    # for i in range(refrence_string_length):
-    #   refrence_string.append(random.randint(1,page_num))
+    page_num = random.randint(0,99)
+    frame_num = random.randint(1,20)
+    refrence_string = []
+    refrence_string_length = random.randint(10,50)
+    for i in range(refrence_string_length):
+       refrence_string.append(random.randint(1,page_num))
     #for debugging
     print("the page number  : {} ".format(page_num))
     print("the frame number : {} ".format(frame_num))
@@ -164,7 +178,6 @@ def main():
 
 main()
 
-# test for FIFO, LRU, and Optimal from lecture 9
 # # page_num = random.randint(0,99)
 # page_num = 20
 # # frame_num = random.randint(1,20)
