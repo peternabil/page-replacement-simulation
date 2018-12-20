@@ -18,8 +18,17 @@ def fifo(refrence_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    pass
-
+    frames = [-1]*frame_num
+    j = 0
+    faults = 0
+    for i in refrence_string:
+        if i in frames:
+            continue
+        j = j % frame_num
+        frames[j] = i
+        j += 1
+        faults += 1
+    return faults
 
 def lru(refrence_string,frame_num,page_num):
     """
@@ -30,7 +39,21 @@ def lru(refrence_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    pass
+    frames = [-1]*frame_num
+    recently = [0]*frame_num
+    faults = 0
+    for i in refrence_string:
+        if i in frames:
+            j = max(recently)
+            recently[frames.index(i)] = j+1
+            continue
+        k = min(recently)
+        j = max(recently)
+        frames[recently.index(k)] = i
+        recently[recently.index(k)] = j+1
+        faults += 1
+    return faults
+
 
 def lfu(refrence_string,frame_num,page_num):
     """
@@ -42,7 +65,19 @@ def lfu(refrence_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    pass
+    frames = [-1] * frame_num
+    frequency = [0] * frame_num
+    faults = 0
+    for i in refrence_string:
+        if i in frames:
+            frequency[frames.index(i)] += 1
+            continue
+        k = min(frequency)
+        frames[frequency.index(k)] = i
+        frequency[frequency.index(k)]=1
+        faults += 1
+    return faults
+
 
 def second_chance(refrence_string,frame_num,page_num):
     """
@@ -103,13 +138,15 @@ def main():
         and call all the past functions then prints the computed page fault number
 
     """
-    page_num = random.randint(0,99)
-    frame_num = random.randint(1,20)
-    refrence_string = []
-    refrence_string_length = random.randint(10,50)
-    for i in range(refrence_string_length):
-        refrence_string.append(random.randint(1,page_num))
-
+    # page_num = random.randint(0,99)
+    page_num = 22
+    # frame_num = random.randint(1,20)
+    frame_num = 3
+    refrence_string = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
+    # refrence_string_length = random.randint(10,50)
+    refrence_string_length = 22
+    # for i in range(refrence_string_length):
+    #   refrence_string.append(random.randint(1,page_num))
     #for debugging
     print("the page number  : {} ".format(page_num))
     print("the frame number : {} ".format(frame_num))
@@ -126,3 +163,14 @@ def main():
     print("using Optimal : {}".format(optimal(refrence_string,frame_num,page_num)))
 
 main()
+
+# test for FIFO, LRU, and Optimal from lecture 9
+# # page_num = random.randint(0,99)
+# page_num = 20
+# # frame_num = random.randint(1,20)
+# frame_num = 3
+# refrence_string = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
+# # refrence_string_length = random.randint(10,50)
+# #refrence_string_length = 20
+# # for i in range(refrence_string_length):
+# #   refrence_string.append(random.randint(1,page_num))
