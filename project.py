@@ -20,7 +20,7 @@ def fifo(reference_string,frame_num,page_num):
     frames = [-1]*frame_num
     j = 0
     faults = 0
-    print("MEANS AN EMPTY FRAME")
+    print("-1 MEANS AN EMPTY FRAME")
     for i in reference_string:
         if i in frames:
             continue
