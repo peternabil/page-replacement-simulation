@@ -21,15 +21,15 @@ def fifo(reference_string, frame_num, page_num):
     frames = [-1] * frame_num
     j = 0
     faults = 0
+    print("-1 MEANS AN EMPTY FRAME")
     for i in reference_string:
-        # print("the Memory : {}".format(frames))
-        # please print the contents of the memory in each iteration
         if i in frames:
             continue
         j = j % frame_num
         frames[j] = i
         j += 1
         faults += 1
+        print("the Memory : {}".format(frames))
     return faults
 
 
@@ -45,9 +45,8 @@ def lru(reference_string, frame_num, page_num):
     frames = [-1] * frame_num
     recently = [0] * frame_num
     faults = 0
+    print("-1 MEANS AN EMPTY FRAME")
     for i in reference_string:
-        # print("the Memory : {}".format(frames))
-        # please print the contents of the memory in each iteration
         if i in frames:
             j = max(recently)
             recently[frames.index(i)] = j + 1
@@ -57,6 +56,7 @@ def lru(reference_string, frame_num, page_num):
         frames[recently.index(k)] = i
         recently[recently.index(k)] = j + 1
         faults += 1
+        print("the Memory : {}".format(frames))
     return faults
 
 
@@ -73,10 +73,13 @@ def lfu(reference_string, frame_num, page_num):
     frames = [-1] * frame_num
     frequency = [0] * frame_num
     faults = 0
+<<<<<<< HEAD
     counter = 0
+=======
+    counter=0
+    print("-1 MEANS AN EMPTY FRAME")
+>>>>>>> ec6360d32ba0df0765e6661c52ef98adccb8b92d
     for i in reference_string:
-        # print("the Memory : {}".format(frames))
-        # please print the contents of the memory in each iteration
         counter += 1
         if i in frames:
             frequency[frames.index(i)] += 1
@@ -96,10 +99,12 @@ def lfu(reference_string, frame_num, page_num):
                 frequency[frames.index(minimums[0])] = 1
                 frames[frames.index(minimums[0])] = i
                 faults += 1
+                print("the Memory : {}".format(frames))
                 continue
         frames[frequency.index(k)] = i
         frequency[frequency.index(k)] = 1
         faults += 1
+        print("the Memory : {}".format(frames))
     return faults
 
 
@@ -308,7 +313,6 @@ def main():
     """
         will generate a random page reference string, random number of frames (1 to 20) and random number of pages (0 to 99)
         and call all the past functions then prints the computed page fault number
-
     """
     page_num = random.randint(0, 99)
     frame_num = random.randint(1, 20)
