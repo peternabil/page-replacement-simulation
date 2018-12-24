@@ -6,9 +6,10 @@
 # -*- coding: utf-8 -*-
 
 
-import random,pylab
+import random
 
-def fifo(reference_string,frame_num,page_num):
+
+def fifo(reference_string, frame_num, page_num):
     """
         the first page to enter the table is the first to be replaced
         returns number of page faults
@@ -17,7 +18,7 @@ def fifo(reference_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    frames = [-1]*frame_num
+    frames = [-1] * frame_num
     j = 0
     faults = 0
     for i in reference_string:
@@ -31,7 +32,8 @@ def fifo(reference_string,frame_num,page_num):
         faults += 1
     return faults
 
-def lru(reference_string,frame_num,page_num):
+
+def lru(reference_string, frame_num, page_num):
     """
         the page that was used a long time ago at that exact moment is to be replaced
         returns number of page faults
@@ -40,25 +42,25 @@ def lru(reference_string,frame_num,page_num):
         frame_num : integer representing the number of frames
         page_num : integer representing the number of pages
     """
-    frames = [-1]*frame_num
-    recently = [0]*frame_num
+    frames = [-1] * frame_num
+    recently = [0] * frame_num
     faults = 0
     for i in reference_string:
         # print("the Memory : {}".format(frames))
         # please print the contents of the memory in each iteration
         if i in frames:
             j = max(recently)
-            recently[frames.index(i)] = j+1
+            recently[frames.index(i)] = j + 1
             continue
         k = min(recently)
         j = max(recently)
         frames[recently.index(k)] = i
-        recently[recently.index(k)] = j+1
+        recently[recently.index(k)] = j + 1
         faults += 1
     return faults
 
 
-def lfu(reference_string,frame_num,page_num):
+def lfu(reference_string, frame_num, page_num):
     """
         look at the entire string untill this moment and find the page addressed the least
         if there's more than one take the first one entered
@@ -71,7 +73,7 @@ def lfu(reference_string,frame_num,page_num):
     frames = [-1] * frame_num
     frequency = [0] * frame_num
     faults = 0
-    counter=0
+    counter = 0
     for i in reference_string:
         # print("the Memory : {}".format(frames))
         # please print the contents of the memory in each iteration
@@ -89,19 +91,19 @@ def lfu(reference_string,frame_num,page_num):
                 for m in reversed(range(counter)):
                     if reference_string[m] in frames and reference_string[m] in minimums:
                         minimums.pop(minimums.index(reference_string[m]))
-                        if len(minimums)==1:
+                        if len(minimums) == 1:
                             break
                 frequency[frames.index(minimums[0])] = 1
                 frames[frames.index(minimums[0])] = i
                 faults += 1
                 continue
         frames[frequency.index(k)] = i
-        frequency[frequency.index(k)]=1
+        frequency[frequency.index(k)] = 1
         faults += 1
     return faults
 
 
-def second_chance(reference_string,frame_num,page_num):
+def second_chance(reference_string, frame_num, page_num):
     """
         each page will have a used bit when it is first allocated this bit is set to 0 when it's addressed again while in the table the bit changes to 1 , if we want to replace
         the first page that meets us with a 0 used bit is removed and add the new page to the end of the queue , if we meet any page with 1 used bit before we find a page with 0
@@ -116,16 +118,16 @@ def second_chance(reference_string,frame_num,page_num):
     selectdict = {}
     pagefault = 0
     for i in range(page_num):
-        selectdict.update({i+1:0})
+        selectdict.update({i + 1: 0})
     # print("The used and modified bits of each page in the system :\n{}".format(selectdict))
     for reference in reference_string:
         if reference in memqueue:
-            selectdict[reference]=1
-        elif len(memqueue)==frame_num:
-            pagefault+=1
+            selectdict[reference] = 1
+        elif len(memqueue) == frame_num:
+            pagefault += 1
             while(1):
                 x = memqueue[0]
-                if selectdict[x]==0:
+                if selectdict[x] == 0:
                     memqueue[0] = reference
                     break
                 else:
@@ -134,7 +136,7 @@ def second_chance(reference_string,frame_num,page_num):
                     memqueue.remove(x)
                     memqueue.append(x)
         else:
-            pagefault+=1
+            pagefault += 1
             memqueue.append(reference)
         # print(memqueue)
         # print(selectdict)
@@ -145,7 +147,8 @@ def second_chance(reference_string,frame_num,page_num):
     return pagefault
     # print(selectdict)
 
-def enhanced_second_chance(reference_string,frame_num,page_num):
+
+def enhanced_second_chance(reference_string, frame_num, page_num):
     """
         each page will have two bits added to them one used bit (same as second_chance)
         and the other is the modified bit this bit will be put randomly , the priority for
@@ -170,7 +173,7 @@ def enhanced_second_chance(reference_string,frame_num,page_num):
     memqueue3 = []
     selectdict = {}
     for page in range(page_num):
-        selectdict.update({page+1:[0,random.randint(0,1)]})
+        selectdict.update({page + 1: [0, random.randint(0, 1)]})
     # print("The used and modified bits of each page in the system :\n{}".format(selectdict))
     for reference in reference_string:
         # print(memqueue0)
@@ -188,8 +191,8 @@ def enhanced_second_chance(reference_string,frame_num,page_num):
         elif reference in memqueue2 or reference in memqueue3:
             continue
         else:
-            pagefault+=1
-            if len(memqueue0)+len(memqueue1)+len(memqueue2)+len(memqueue3) < frame_num:
+            pagefault += 1
+            if len(memqueue0) + len(memqueue1) + len(memqueue2) + len(memqueue3) < frame_num:
                 # print("{} there's space in buffer".format(reference))
                 if selectdict[reference][1] == 0:
                     memqueue0.append(reference)
@@ -204,7 +207,7 @@ def enhanced_second_chance(reference_string,frame_num,page_num):
                 else:
                     memqueue1.append(reference)
 
-            elif len(memqueue1) !=0:
+            elif len(memqueue1) != 0:
                 # print("we will add {} in queue00 and remove {}".format(reference,memqueue1[0]))
                 memqueue1.remove(memqueue1[0])
                 if selectdict[reference][1] == 0:
@@ -212,7 +215,7 @@ def enhanced_second_chance(reference_string,frame_num,page_num):
                 else:
                     memqueue1.append(reference)
 
-            elif len(memqueue2) !=0:
+            elif len(memqueue2) != 0:
                 # print("we will add {} in queue00 and remove {}".format(reference,memqueue2[0]))
                 selectdict[memqueue2[0]][0] = 0
                 memqueue2.remove(memqueue2[0])
@@ -226,7 +229,7 @@ def enhanced_second_chance(reference_string,frame_num,page_num):
                     memqueue2.remove(item)
                     selectdict[item][0] = 0
 
-            elif len(memqueue3) !=0:
+            elif len(memqueue3) != 0:
                 # print("we will add {} in queue00 and remove {}".format(reference,memqueue3[0]))
                 selectdict[memqueue3[0]][0] = 0
                 memqueue3.remove(memqueue3[0])
@@ -250,11 +253,12 @@ def enhanced_second_chance(reference_string,frame_num,page_num):
             memqueue.append(i)
         print("The used and modified bits of each page in the system :\n{}".format(selectdict))
         print()
-        print("the Memory : \n queue00 : {}\nqueue01 : {}\nqueue10 : {}\nqueue11 : {}\n".format(memqueue0,memqueue1,memqueue2,memqueue3))
+        print("the Memory : \n queue00 : {}\nqueue01 : {}\nqueue10 : {}\nqueue11 : {}\n".format(memqueue0, memqueue1, memqueue2, memqueue3))
 
     return pagefault
 
-def optimal(reference_string,frame_num,page_num):
+
+def optimal(reference_string, frame_num, page_num):
     """
         we calculate how much will each page be used and the one which is least used is
         the one we replace
@@ -268,31 +272,35 @@ def optimal(reference_string,frame_num,page_num):
     memqueue = []
     pagefault = 0
     for item in reference_string:
-        frequency.update({item:0})
-    for item in reference_string:
-        frequency[item]+=1
+        if item in frequency.keys():
+            frequency[item] += 1
+        else:
+            frequency.update({item: 0})
+    print(frequency)
     for reference in reference_string:
-
         if reference in memqueue:
             continue
         if len(memqueue) < frame_num:
             memqueue.append(reference)
-            pagefault+=1
+            pagefault += 1
         else:
-            pagefault+=1
+            pagefault += 1
             tempdict = {}
+            minfreq = max(frequency, key=frequency.get)
             for memitem in memqueue:
-                tempdict.update({memitem:frequency[memitem]})
-            replacement = min(tempdict, key=tempdict.get)
-            memqueue[memqueue.index(replacement)]=reference
+                if frequency[memitem] < frequency[minfreq]:
+                    minfreq = memitem
+
+            memqueue[memqueue.index(minfreq)] = reference
         print("the Memory : {}".format(memqueue))
     return pagefault
 
+
 def printing(reference_string):
     reference_string_modified = ""
-    for i in range(len(reference_string)-1):
-        reference_string_modified+=str(reference_string[i])+"-->"
-    reference_string_modified+=str(reference_string[-1])
+    for i in range(len(reference_string) - 1):
+        reference_string_modified += str(reference_string[i]) + "-->"
+    reference_string_modified += str(reference_string[-1])
     return reference_string_modified
 
 
@@ -302,37 +310,33 @@ def main():
         and call all the past functions then prints the computed page fault number
 
     """
-    page_num = random.randint(0,99)
-    frame_num = random.randint(1,20)
+    page_num = random.randint(0, 99)
+    frame_num = random.randint(1, 20)
     reference_string = []
-    reference_string_length = random.randint(10,50)
+    reference_string_length = random.randint(10, 50)
     for i in range(reference_string_length):
-       reference_string.append(random.randint(1,page_num))
-    #for debugging
-    page_num = 10
-    frame_num = 5
-    reference_string = [2,2,3,4,5,6,6,3,5,7,8]
+        reference_string.append(random.randint(1, page_num))
+    # for debugging
+    # page_num = 10
+    # frame_num = 5
+    # reference_string = [2, 2, 3, 4, 5, 6, 6, 3, 5, 7, 8]
     print("the page number  : {} ".format(page_num))
     print("the frame number : {} ".format(frame_num))
     print("the reference string length : {} ".format(reference_string_length))
     print("the reference string {}".format(printing(reference_string)))
     print("The page faults : ")
     print("Using FIFO : ")
-    print("The Page Faults = {} ".format(fifo(reference_string,frame_num,page_num)))
+    print("The Page Faults = {} ".format(fifo(reference_string, frame_num, page_num)))
     print("Using LRU : ")
-    print("The Page Faults = {} ".format(lru(reference_string,frame_num,page_num)))
+    print("The Page Faults = {} ".format(lru(reference_string, frame_num, page_num)))
     print("Using LFU : ")
-    print("The Page Faults = {} ".format(lfu(reference_string,frame_num,page_num)))
+    print("The Page Faults = {} ".format(lfu(reference_string, frame_num, page_num)))
     print("Using Second-Chance : ")
-    print("The Page Faults = {} ".format(second_chance(reference_string,frame_num,page_num)))
+    print("The Page Faults = {} ".format(second_chance(reference_string, frame_num, page_num)))
     print("Using enhanced Second Chance : ")
-    print("The Page Faults = {} ".format(enhanced_second_chance(reference_string,frame_num,page_num)))
+    print("The Page Faults = {} ".format(enhanced_second_chance(reference_string, frame_num, page_num)))
     print("Using Optimal : ")
-    print("The Page Faults = {} ".format(optimal(reference_string,frame_num,page_num)))
-
-
-
-
+    print("The Page Faults = {} ".format(optimal(reference_string, frame_num, page_num)))
 
     # fifolist = []
     # lrulist = []
