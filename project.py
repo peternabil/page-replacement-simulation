@@ -7,6 +7,7 @@
 
 
 import random
+# import pylab
 
 
 def fifo(reference_string, frame_num, page_num):
