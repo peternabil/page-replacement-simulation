@@ -73,12 +73,8 @@ def lfu(reference_string, frame_num, page_num):
     frames = [-1] * frame_num
     frequency = [0] * frame_num
     faults = 0
-<<<<<<< HEAD
-    counter = 0
-=======
     counter=0
     print("-1 MEANS AN EMPTY FRAME")
->>>>>>> ec6360d32ba0df0765e6661c52ef98adccb8b92d
     for i in reference_string:
         counter += 1
         if i in frames:
