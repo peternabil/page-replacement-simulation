@@ -1,10 +1,13 @@
 # page-replacement-simulation
 - This is a college mini project in simulating [page replacement algorithms](https://en.wikipedia.org/wiki/Page_replacement_algorithm)
 # The Implemented argorithms are :
-- [FIFO] (https://en.wikipedia.org/wiki/Page_replacement_algorithm)
-- [LRU] (https://en.wikipedia.org/wiki/Page_replacement_algorithm#Least_recently_used)
+- [FIFO] 
+(<https://en.wikipedia.org/wiki/Page_replacement_algorithm#First-in,_first-out>)
+- [LRU] 
+(https://en.wikipedia.org/wiki/Page_replacement_algorithm#Least_recently_used)
 - LFU
-- [Second-Chance] (https://en.wikipedia.org/wiki/Page_replacement_algorithm#Second-chance)
+- [Second-Chance] 
+(https://en.wikipedia.org/wiki/Page_replacement_algorithm#Second-chance)
 - Enhanced Second-Chance
 - optimal
 
