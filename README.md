@@ -1,7 +1,7 @@
 # page-replacement-simulation
 - This is a college mini project in simulating [page replacement algorithms](https://en.wikipedia.org/wiki/Page_replacement_algorithm)
 # The Implemented argorithms are :
-- [FIFO] 
+- [FIFO ] 
 (<https://en.wikipedia.org/wiki/Page_replacement_algorithm#First-in,_first-out>)
 - [LRU] 
 (https://en.wikipedia.org/wiki/Page_replacement_algorithm#Least_recently_used)
